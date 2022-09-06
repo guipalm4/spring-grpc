@@ -1,6 +1,8 @@
 package com.guipalm4.application.service.impl;
 
 import com.guipalm4.application.service.ProductService;
+import com.guipalm4.domain.exception.AlreadyExistException;
+import com.guipalm4.domain.exception.NotFoundException;
 import com.guipalm4.domain.product.Product;
 import com.guipalm4.domain.product.ProductInputDTO;
 import com.guipalm4.domain.product.ProductOutputDTO;
@@ -21,6 +23,8 @@ public class ProductServiceImpl implements ProductService {
 
     public ProductOutputDTO create(final ProductInputDTO aProduct) {
 
+        checkDuplicity(aProduct.getName());
+
         var product = Product.newProduct(
                 aProduct.getName(), aProduct.getPrice(), aProduct.getQuantityInStock()
         );
@@ -31,7 +35,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public ProductOutputDTO findById(final String anId) {
-        return null;
+
+        return productRepository.findById(anId).map(ProductOutputDTO::fromEntity)
+                .orElseThrow(()-> new NotFoundException(anId));
     }
 
     public void delete(final String anId) {
@@ -40,5 +46,12 @@ public class ProductServiceImpl implements ProductService {
 
     public List<ProductOutputDTO> findAll() {
         return null;
+    }
+
+    private void checkDuplicity(String name) {
+        this.productRepository.findByNameIgnoreCase(name)
+                .ifPresent(ex-> {
+                    throw new AlreadyExistException(name);
+                });
     }
 }
