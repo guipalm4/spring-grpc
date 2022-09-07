@@ -36,7 +36,8 @@ public class ProductServiceImpl implements ProductService {
 
     public ProductOutputDTO findById(final String anId) {
 
-        return productRepository.findById(anId).map(ProductOutputDTO::fromEntity)
+        return productRepository.findById(anId)
+                .map(ProductOutputDTO::fromEntity)
                 .orElseThrow(()-> new NotFoundException(anId));
     }
 

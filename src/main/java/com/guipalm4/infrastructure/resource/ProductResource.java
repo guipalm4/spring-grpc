@@ -27,13 +27,14 @@ public class ProductResource extends ProductServiceGrpc.ProductServiceImplBase {
                 .setId(output.getId())
                 .setName(output.getName())
                 .setPrice(output.getPrice())
-                .setStock(output.getQuantityInStock())
+                .setStock(output.getStock())
                 .build();
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
     }
 
+    @Override
     public void findById(final RequestById request, final StreamObserver<ProductResponse> responseObserver) {
 
         final var id = request.getId();
@@ -42,7 +43,7 @@ public class ProductResource extends ProductServiceGrpc.ProductServiceImplBase {
                 .setId(output.getId())
                 .setName(output.getName())
                 .setPrice(output.getPrice())
-                .setStock(output.getQuantityInStock())
+                .setStock(output.getStock())
                 .build();
 
         responseObserver.onNext(response);

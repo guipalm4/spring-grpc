@@ -8,13 +8,13 @@ public class ProductOutputDTO {
 
     private final String name;
     private final Double price;
-    private final  Integer quantityInStock;
+    private final Integer stock;
 
-    public ProductOutputDTO(final String id, final String name, final Double price, final Integer quantityInStock) {
+    public ProductOutputDTO(final String id, final String name, final Double price, final Integer stock) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.quantityInStock = quantityInStock;
+        this.stock = stock;
     }
 
     public static ProductOutputDTO fromEntity(ProductJpaEntity productJpaEntity) {
@@ -38,7 +38,7 @@ public class ProductOutputDTO {
         return price;
     }
 
-    public Integer getQuantityInStock() {
-        return quantityInStock;
+    public Integer getStock() {
+        return stock;
     }
 }

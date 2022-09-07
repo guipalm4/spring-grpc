@@ -2,6 +2,7 @@ package com.guipalm4.application.service;
 
 import com.guipalm4.application.service.impl.ProductServiceImpl;
 import com.guipalm4.domain.exception.AlreadyExistException;
+import com.guipalm4.domain.exception.NotFoundException;
 import com.guipalm4.domain.product.Product;
 import com.guipalm4.domain.product.ProductInputDTO;
 import com.guipalm4.infrastructure.persistence.ProductJpaEntity;
@@ -42,9 +43,9 @@ public class ProductServiceImpTest {
 
         Assertions.assertThat(expectedProduct.getId()).isNotNull();
 
-        final var actual = productService.create(request);
+        final var response = productService.create(request);
 
-        Assertions.assertThat(actual)
+        Assertions.assertThat(response)
                 .usingRecursiveComparison()
                 .comparingOnlyFields("id", "name", "price", "stock")
                 .isEqualTo(expectedProduct);
@@ -68,6 +69,45 @@ public class ProductServiceImpTest {
 
         Assertions.assertThatExceptionOfType(AlreadyExistException.class)
                 .isThrownBy(() -> productService.create(request));
+    }
+
+    @Test
+    @DisplayName("should return a product when id exist")
+    void findByIdTest() {
+
+        final var id  = "8171ccb6-4165-41ee-9774-8b804be0e9f1";
+        final var expectedProduct = ProductJpaEntity.from(
+                Product.with(
+                        id,
+                        "Product A",
+                        20.00,
+                        5
+                )
+        );
+
+        Mockito.when(productRepository.findById(id))
+                .thenReturn(Optional.of(expectedProduct));
+
+        final var response = productService.findById(id);
+
+        Assertions.assertThat(response)
+                .usingRecursiveComparison()
+                .comparingOnlyFields("id", "name", "price", "stock")
+                .isEqualTo(expectedProduct);
+
+    }
+
+    @Test
+    @DisplayName("should throw NotFoundException when a id not exist")
+    void findByIdThrowingNotFoundExceptionTest() {
+
+        final var id  = "8171ccb6-4165-41ee-9774-8b804be0e9f1";
+
+        Mockito.when(productRepository.findById(Mockito.any()))
+                .thenReturn(Optional.empty());
+
+        Assertions.assertThatExceptionOfType(NotFoundException.class)
+                .isThrownBy(() -> productService.findById(id));
     }
 }
 

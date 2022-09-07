@@ -2,7 +2,9 @@ package com.guipalm4.infrastructure.resource;
 
 import com.guipalm4.ProductRequest;
 import com.guipalm4.ProductServiceGrpc;
+import com.guipalm4.RequestById;
 import com.guipalm4.domain.exception.AlreadyExistException;
+import com.guipalm4.domain.product.ProductOutputDTO;
 import io.grpc.StatusRuntimeException;
 import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.assertj.core.api.Assertions;
@@ -51,7 +53,7 @@ public class ProductResourceITest {
     }
 
     @Test
-    @DisplayName("should throw AlreadyExistException when call create a product with duplicated name")
+    @DisplayName("should throw AlreadyExist when call create a product with duplicated name")
     void createProductAlreadyExistTest() {
 
         final var request= ProductRequest.newBuilder()
@@ -64,5 +66,31 @@ public class ProductResourceITest {
         Assertions.assertThatExceptionOfType(StatusRuntimeException.class)
                 .isThrownBy(() -> productServiceGrpc.create(request))
                 .withMessage("ALREADY_EXISTS: Product 'Mouse Wireless' already exist.");
+    }
+    @Test
+    @DisplayName("should return a Product when call findById with valid id")
+    void findByIdProductSuccess() {
+
+        final var validId = "6166dfbc-d319-45b6-a1f4-7f300856ee0f";
+        final var request= RequestById.newBuilder().setId(validId).build();
+        final var expectedProduct = new ProductOutputDTO(validId, "Mouse Wireless", 89.90, 15);
+
+        final var response = productServiceGrpc.findById(request);
+
+        Assertions.assertThat(response)
+                .usingRecursiveComparison()
+                .comparingOnlyFields("id","name", "price", "stock")
+                .isEqualTo(expectedProduct);
+    }
+    @Test
+    @DisplayName("should throw Notfound when call findById with invalid id")
+    void findByIdException() {
+
+        final var invalidId = "invalid_id";
+        final var request= RequestById.newBuilder().setId(invalidId).build();
+
+        Assertions.assertThatExceptionOfType(StatusRuntimeException.class)
+                .isThrownBy(() -> productServiceGrpc.findById(request))
+                .withMessage("NOT_FOUND: Product with ID 'invalid_id' not found in database.");
     }
 }
