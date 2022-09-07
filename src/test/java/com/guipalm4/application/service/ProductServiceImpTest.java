@@ -16,6 +16,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -108,6 +110,67 @@ public class ProductServiceImpTest {
 
         Assertions.assertThatExceptionOfType(NotFoundException.class)
                 .isThrownBy(() -> productService.findById(id));
+    }
+
+    @Test
+    @DisplayName("should delete a product when id exist")
+    void deleteByIdSuccessTest() {
+
+        final var id  = "8171ccb6-4165-41ee-9774-8b804be0e9f1";
+        final var expectedProduct = ProductJpaEntity.from(
+                Product.with(
+                        id,
+                        "Product A",
+                        20.00,
+                        5
+                )
+        );
+
+        Mockito.when(productRepository.findById(id))
+                .thenReturn(Optional.of(expectedProduct));
+
+        productService.delete(id);
+
+        Assertions.assertThatNoException().isThrownBy(()->productRepository.findById(id));
+    }
+
+    @Test
+    @DisplayName("should throw NotFoundException when delete a product when id not exist")
+    void deleteByIdNotFoundTest() {
+
+        final var id  = "8171ccb6-4165-41ee-9774-8b804be0e9f1";
+
+
+        Mockito.when(productRepository.findById(Mockito.any()))
+                .thenReturn(Optional.empty());
+
+        Assertions.assertThatExceptionOfType(NotFoundException.class)
+                .isThrownBy(() -> productService.delete(id));
+    }
+
+    @Test
+    @DisplayName("should return all products")
+    void findAllTest() {
+
+        final var id  = "8171ccb6-4165-41ee-9774-8b804be0e9f1";
+        final var expectedProduct = ProductJpaEntity.from(
+                Product.with(
+                        id,
+                        "Product A",
+                        20.00,
+                        5
+                )
+        );
+
+        Mockito.when(productRepository.findAll())
+                .thenReturn(List.of(expectedProduct));
+
+        final var response = productService.findAll();
+
+        Assertions.assertThat(response.get(0))
+                .usingRecursiveComparison()
+                .comparingOnlyFields("id", "name", "price", "stock")
+                .isEqualTo(expectedProduct);
     }
 }
 

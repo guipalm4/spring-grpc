@@ -11,6 +11,7 @@ import com.guipalm4.infrastructure.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -42,10 +43,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public void delete(final String anId) {
+
+        final var product = productRepository.findById(anId)
+                .orElseThrow(()-> new NotFoundException(anId));
+        productRepository.delete(product);
     }
 
     public List<ProductOutputDTO> findAll() {
-        return null;
+
+        return productRepository.findAll().stream()
+                .map(ProductOutputDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
     private void checkDuplicity(String name) {
