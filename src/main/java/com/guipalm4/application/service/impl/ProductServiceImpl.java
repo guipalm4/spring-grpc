@@ -41,7 +41,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public void delete(final String anId) {
-
     }
 
     public List<ProductOutputDTO> findAll() {

@@ -5,40 +5,40 @@ import java.util.UUID;
 
 public class Product {
 
-    private String id;
-    private String name;
-    private Double price;
-    private Integer quantityInStock;
+    private final String id;
+    private final String name;
+    private final Double price;
+    private final Integer stock;
 
     private Product(
             final String id,
             final String name,
             final Double price,
-            final Integer quantityInStock
+            final Integer stock
     ) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.quantityInStock = quantityInStock;
+        this.stock = stock;
     }
 
     public static Product newProduct(
             final String aName,
             final Double aPrice,
-            final Integer quantityInStock
+            final Integer stock
     ) {
         var id = UUID.randomUUID().toString();
 
-        return new Product(id, aName, aPrice, quantityInStock);
+        return new Product(id, aName, aPrice, stock);
     }
 
     public static Product with(
             final String anId,
             final String aName,
             final Double aPrice,
-            final Integer quantityInStock
+            final Integer stock
     ) {
-        return new Product(anId, aName, aPrice, quantityInStock);
+        return new Product(anId, aName, aPrice, stock);
     }
 
     public String getId() {
@@ -53,7 +53,7 @@ public class Product {
         return price;
     }
 
-    public Integer getQuantityInStock() {
-        return quantityInStock;
+    public Integer getStock() {
+        return stock;
     }
 }

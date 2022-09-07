@@ -22,7 +22,7 @@ public class ProductOutputDTO {
                 productJpaEntity.getId(),
                 productJpaEntity.getName(),
                 productJpaEntity.getPrice(),
-                productJpaEntity.getQuantityInStock()
+                productJpaEntity.getStock()
         );
     }
 

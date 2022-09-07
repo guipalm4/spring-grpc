@@ -1,7 +1,5 @@
 package com.guipalm4.domain.product;
 
-import com.guipalm4.infrastructure.persistence.ProductJpaEntity;
-
 public class ProductInputDTO {
 
     private final String name;

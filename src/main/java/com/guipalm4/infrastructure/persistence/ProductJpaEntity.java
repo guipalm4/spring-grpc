@@ -15,7 +15,7 @@ public class ProductJpaEntity {
     private String id;
     private String name;
     private Double price;
-    private Integer quantityInStock;
+    private Integer stock;
 
     public ProductJpaEntity() {
     }
@@ -24,11 +24,11 @@ public class ProductJpaEntity {
             final String id,
             final String name,
             final Double price,
-            final Integer quantityInStock) {
+            final Integer stock) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.quantityInStock = quantityInStock;
+        this.stock = stock;
     }
 
     public Product toDomain() {
@@ -36,7 +36,7 @@ public class ProductJpaEntity {
                 getId(),
                 getName(),
                 getPrice(),
-                getQuantityInStock()
+                getStock()
         );
     }
 
@@ -45,7 +45,7 @@ public class ProductJpaEntity {
                 aProduct.getId(),
                 aProduct.getName(),
                 aProduct.getPrice(),
-                aProduct.getQuantityInStock()
+                aProduct.getStock()
         );
     }
 
@@ -61,8 +61,8 @@ public class ProductJpaEntity {
         return price;
     }
 
-    public Integer getQuantityInStock() {
-        return quantityInStock;
+    public Integer getStock() {
+        return stock;
     }
 
     @Override
